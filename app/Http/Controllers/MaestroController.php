@@ -9,6 +9,15 @@ use View, Input;
 
 class MaestroController extends BaseController
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * @param string $acc

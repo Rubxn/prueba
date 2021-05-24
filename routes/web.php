@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/{acc?}/{type?}/{id?}', 'MaestroController@index');
-Route::post('/marca', 'MaestroController@Marca');
-Route::post('/producto', 'MaestroController@Producto');
+Auth::routes();
+
+Route::get('/{acc?}/{type?}/{id?}', 'MaestroController@index')->name('home');
+
+Route::post('/marca', 'MaestroController@Marca')->middleware('auth');
+Route::post('/producto', 'MaestroController@Producto')->middleware('auth');
+
