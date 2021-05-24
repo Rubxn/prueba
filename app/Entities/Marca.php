@@ -9,6 +9,11 @@ class Marca extends Model
 
     protected $table = 'marcas';
 
+    /**
+     * Función para registrar nuevas marcas
+     * @param $datos
+     * @return Marca
+     */
     public static function addMarca( $datos ) {
 
         $marca = new self();
@@ -20,6 +25,11 @@ class Marca extends Model
         return $marca;
     }
 
+    /**
+     * Función para editar una marca
+     * @param $datos
+     * @return mixed
+     */
     public static function editMarca( $datos ) {
 
         $marca = self::find($datos['id']);
@@ -31,8 +41,19 @@ class Marca extends Model
         return $marca;
     }
 
-    public static function deleteMarca( $id ) {
-
+    /**
+     * Función para eliminar una Marc
+     * @param $id
+     */
+    public static function deleteMarca( $id ):void {
         self::find($id)->delete();
+    }
+
+    /**
+     * Función para retornar todas las marcas
+     * @return Marca[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public static function getMarcas() {
+        return self::all()->sortByDesc('id');
     }
 }

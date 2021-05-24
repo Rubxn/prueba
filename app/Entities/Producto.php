@@ -48,4 +48,9 @@ class Producto extends Model
     public static function checkFKMarca( $idMarca ) {
         return self::where('marca_id',$idMarca)->count();
     }
+
+    public static function getProductos() {
+        return self::leftJoin('marcas','marcas.id','=','productos.marca_id')
+            ->get(['productos.*','marcas.nombre AS nombre_marca','marcas.referencia']);
+    }
 }

@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/{acc?}/{type?}/{id?}', 'MarcaController@index');
-Route::post('/marca', 'MarcaController@Marca');
-Route::post('/producto', 'MarcaController@Producto');
+Route::get('/{acc?}/{type?}/{id?}', 'MaestroController@index');
+Route::post('/marca', 'MaestroController@Marca');
+Route::post('/producto', 'MaestroController@Producto');

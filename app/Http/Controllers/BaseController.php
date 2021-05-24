@@ -10,16 +10,21 @@ class BaseController extends Controller
 {
     protected $_data = [];
 
+    /**
+     * @param $table
+     * @param array $data
+     * @param false $updating
+     * @return \Illuminate\Contracts\Validation\Validator|string
+     */
     protected function validator( $table, array $data, $updating = false )
     {
-
         $validation = '';
         $messages = [
             'required'  => 'El campo :attribute es obligatorio.',
             'integer'   => 'El campo :attribute debe ser numérico.',
             'unique'    => 'El campo :attribute ya existe en otro registro.',
-            'min'      => 'El campo :attribute debe ser mayor o igual :min',
-            'max'      => 'El campo :attribute solo permite un máximo de :max caracteres',
+            'min'       => 'El campo :attribute debe ser mayor o igual :min',
+            'max'       => 'El campo :attribute solo permite un máximo de :max caracteres',
         ];
 
         switch ( $table ) {

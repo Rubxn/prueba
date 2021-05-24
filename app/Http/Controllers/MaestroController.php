@@ -5,33 +5,35 @@ namespace App\Http\Controllers;
 use App\Entities\Marca;
 use App\Entities\Producto;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use View, Input;
 
-class MarcaController extends BaseController
+class MaestroController extends BaseController
 {
 
     /**
      * @param string $acc
      * @param string $type
      * @param int $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
-    public function index($acc = 'list', $type = '', $id = 0)
+    public function index(string $acc = 'list', string $type = '', int $id = 0)
     {
 
-        $this->_data['marcas']      = Marca::all()->sortByDesc('id');
-        $this->_data['productos']   = Producto::leftJoin('marcas','marcas.id','=','productos.marca_id')
-                                                ->get(['productos.*','marcas.nombre AS nombre_marca','marcas.referencia']);
-        $this->_data['acc'] = $acc;
+        $this->_data['marcas']      = Marca::getMarcas();
+        $this->_data['productos']   = Producto::getProductos();
+        $this->_data['acc']         = $acc;
 
+        //Valido si el parametro acción es eliminar y recibo un ID
         if ( $acc == 'delete' && $id > 0 ) {
 
             $result = ['response' => 1, 'message' => 'Registro eliminado exitosamente'];
 
+            // En caso de eliminar una marca
             if ( $type == 'marca' ) {
 
+                // Consulto si existe la marca
                 $marca      = Marca::find($id);
+                // Verifico si la marca está registrada en un producto
                 $validarFK  = Producto::checkFKMarca( $id );
 
                 if ( $validarFK > 0 ) {
@@ -41,6 +43,7 @@ class MarcaController extends BaseController
                 }
             }
 
+            // En caso de eliminar una marca
             if ( $type == 'producto' ) {
                 Producto::deleteProducto($id);
             }
@@ -48,15 +51,11 @@ class MarcaController extends BaseController
             return response()->json($result);
         }
 
+        // Valido si me piden editar
         if ( $acc == 'edit' && $id > 0 ) {
 
-            if ( $type == 'marca' ) {
-                $datos = Marca::find($id);
-            }
-
-            if ( $type == 'producto' ) {
-                $datos = Producto::find($id);
-            }
+            if ( $type == 'marca' )     { $datos = Marca::find($id); }
+            if ( $type == 'producto' )  { $datos = Producto::find($id); }
 
             return response()->json($datos);
         }
@@ -65,6 +64,7 @@ class MarcaController extends BaseController
     }
 
     /**
+     * Método para registrar/actualizar información de las marcas
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -97,6 +97,7 @@ class MarcaController extends BaseController
     }
 
     /**
+     * Método para registrar/actualizar productos
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -108,10 +109,12 @@ class MarcaController extends BaseController
 
         try {
 
+            // Verifico si del recibo del form un id
             if ( $request->get('id') > 0 ) {
+                // Actualizo el producto
                 $producto = Producto::editProducto($request->all());
             } else {
-                // Registramos la nueva marca
+                // Registramos el producto
                 $producto = Producto::addProducto($request->all());
             }
 
